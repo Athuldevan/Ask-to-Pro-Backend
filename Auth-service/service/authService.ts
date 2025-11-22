@@ -19,7 +19,5 @@ export async function verifyOtp(enteredOtp: string, email: string) {
   const storedOtp = await client.get(`otp:${email}`);
   if (!storedOtp) throw new AppError(`The Otp Expired`, 400);
   if (enteredOtp !== storedOtp) throw new AppError(`Invalid Otp`, 400);
-  if (enteredOtp === storedOtp) {
-    return true;
-  }
+  return true;
 }
