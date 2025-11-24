@@ -1,6 +1,8 @@
+
 import { client } from "../config/redis.js";
 import User, { type IUser } from "../model/userModel.js";
 import { AppError } from "../utils/AppError.js";
+
 
 export async function createUser(
   name: string,
@@ -21,3 +23,5 @@ export async function verifyOtp(enteredOtp: string, email: string) {
   if (enteredOtp !== storedOtp) throw new AppError(`Invalid Otp`, 400);
   return true;
 }
+
+

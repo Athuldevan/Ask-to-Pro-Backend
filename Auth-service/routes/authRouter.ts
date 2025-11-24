@@ -1,5 +1,10 @@
 import express from "express";
-import { register, verifyUser } from "../controller/authController.js";
+import {
+  login,
+  logout,
+  register,
+  verifyUser,
+} from "../controller/authController.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import { validate } from "../middlewares/joiValidation.js";
 import {
@@ -18,5 +23,8 @@ router.post(
   validate({ type: "body", schema: verifyUserSchema }),
   catchAsync(verifyUser)
 );
+
+router.post("/login", login);
+router.post("/logout", logout);
 
 export default router;

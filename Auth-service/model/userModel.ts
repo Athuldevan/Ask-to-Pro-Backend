@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
+
 export interface IUser extends Document {
   name: string;
   email: string;
@@ -7,7 +8,10 @@ export interface IUser extends Document {
   isPremium: boolean;
   role: "user" | "admin";
   chatMessageCount: number;
+
+  verifyPassword(enteredPassword: string): Promise<Boolean>;
 }
+import { AppError } from "../utils/AppError.js";
 
 const userSchema = new Schema<IUser>(
   {
@@ -51,10 +55,16 @@ const userSchema = new Schema<IUser>(
 
 //hash password
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next;
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 6);
   next();
 });
+
+//Verify password;
+userSchema.methods.verifyPassword =  async  function (enteredPassword: string):Promise<boolean> {
+  if (!enteredPassword) throw new AppError(`Password field is missing`, 400);
+  return await  bcrypt.compare(enteredPassword, this.password);
+};
 
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;
