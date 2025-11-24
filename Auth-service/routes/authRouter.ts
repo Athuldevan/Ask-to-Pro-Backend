@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  forgotPassword,
   login,
   logout,
   register,
@@ -11,6 +12,7 @@ import {
   registerSchema,
   verifyUserSchema,
 } from "../validations/authValidations.js";
+import { protect } from "../middlewares/protectMiddleware.js";
 
 const router = express.Router();
 router.post(
@@ -26,5 +28,6 @@ router.post(
 
 router.post("/login", login);
 router.post("/logout", logout);
+router.post("/forgot-password", protect, forgotPassword)
 
 export default router;

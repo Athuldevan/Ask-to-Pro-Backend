@@ -5,4 +5,5 @@ export declare function createUser(name: string, email: string, password: string
     __v: number;
 }>;
 export declare function verifyOtp(enteredOtp: string, email: string): Promise<boolean>;
+export declare const requestResetPassword: (email: string) => Promise<void>;
 //# sourceMappingURL=authService.d.ts.map

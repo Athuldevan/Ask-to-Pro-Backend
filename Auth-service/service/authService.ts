@@ -1,8 +1,9 @@
-
+import { sendMail } from "../config/nodemailer.js";
 import { client } from "../config/redis.js";
 import User, { type IUser } from "../model/userModel.js";
 import { AppError } from "../utils/AppError.js";
-
+import { catchAsync } from "../utils/catchAsync.js";
+import { createResetPasswordToken } from "../utils/createResetPasswordToken.js";
 
 export async function createUser(
   name: string,
@@ -24,4 +25,21 @@ export async function verifyOtp(enteredOtp: string, email: string) {
   return true;
 }
 
+export const requestResetPassword = async function (email: string) {
+  if (!email) {
+    console.log("`Emial is required");
+  }
+  const user = await User.findOne({ email });
+ 
+  if (!user) return;
+  const resetPasswordToken =  createResetPasswordToken(
+    user?._id.toString()
+  );
+  const resetURL = `http://localhost:3000/reset-password/${resetPasswordToken}`;
 
+  await sendMail({
+    to: user.email,
+    subject: "Password Reset",
+    text: "Click to reset Password" + resetURL,
+  });
+};

@@ -1,6 +1,6 @@
 import { AppError } from "../utils/AppError.js";
 import type { Response, Request, NextFunction } from "express";
-import { verifyOtp } from "../service/authService.js";
+import { requestResetPassword, verifyOtp } from "../service/authService.js";
 import { sendOtp } from "../utils/otp.js";
 import { client } from "../config/redis.js";
 import User from "../model/userModel.js";
@@ -173,7 +173,21 @@ export const logout = catchAsync(async function (req: Request, res: Response) {
   });
 });
 
-
 // ------------------ FORGOT PASSWORD --------------
+export const forgotPassword = catchAsync(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { email } = req.body;
+  const loggedInUser = req.user;
 
 
+  if (!loggedInUser) throw new AppError("You are not Logged In user", 401);
+
+  await requestResetPassword(email);
+  res.json({
+    status : "sucess",
+    message : "Email sent sucessfully",
+  });
+});

@@ -17,10 +17,11 @@ export const protect = catchAsync(async function (
     throw new AppError("unAuthorized", 401);
 
   let token = authHeader.split(" ")[1];
+
   if (!token) throw new AppError("No token found", 401);
 
   const decoded = jwt.verify(token, "ACESSTOKENSECRET") as TokenPayload;
-  req.user = decoded?._id;
+  req.user = decoded?.id;
   if (!req.user)
     throw new AppError(
       "You are not Logged in Please.Please Login First!!",
