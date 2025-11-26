@@ -1,5 +1,5 @@
 import { AppError } from "../utils/AppError.js";
-import { verifyOtp } from "../service/authService.js";
+import { requestResetPassword, verifyOtp } from "../service/authService.js";
 import { sendOtp } from "../utils/otp.js";
 import { client } from "../config/redis.js";
 import User from "../model/userModel.js";
@@ -70,8 +70,8 @@ export const login = catchAsync(async function (req, res, next) {
     });
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "strict",
+        secure: false,
+        sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24 * 7,
     });
     return res.status(200).json({
@@ -83,7 +83,8 @@ export const login = catchAsync(async function (req, res, next) {
 });
 // -------------------------- REFRESH TOKEN CONTROLLR --------------------------
 export const refresh = catchAsync(async function (req, res) {
-    const refreshToken = req.cookies?.refreshToken;
+    console.log(req.cookies);
+    const refreshToken = req.cookies["refreshToken"];
     if (!refreshToken)
         throw new AppError("No Refresh Token found", 401);
     // Finding in DB
@@ -141,4 +142,34 @@ export const logout = catchAsync(async function (req, res) {
     });
 });
 // ------------------ FORGOT PASSWORD --------------
+export const forgotPassword = catchAsync(async function (req, res, next) {
+    const { email } = req.body;
+    if (!email) {
+        return next(new AppError("Email is required", 400));
+    }
+    await requestResetPassword(email);
+    res.json({
+        status: "sucess",
+        message: "Email sent sucessfully",
+    });
+});
+export const resetPassword = catchAsync(async function (req, res, next) {
+    const { token } = req.params;
+    const { password } = req.body;
+    if (!token)
+        throw new AppError("Token is required", 400);
+    if (!password)
+        throw new AppError("Please Enter Your new password", 400);
+    const user = await User.findOne({ passwordResetToken: token });
+    if (!user)
+        throw new AppError("Token is Expired", 400);
+    //Setting the new Password;
+    user.password = password;
+    user.passwordResetToken = undefined;
+    await user.save();
+    res.status(200).json({
+        status: "sucess",
+        message: "Password reset sucessfull.You can now log in with your new password",
+    });
+});
 //# sourceMappingURL=authController.js.map

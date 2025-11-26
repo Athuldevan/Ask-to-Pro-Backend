@@ -4,11 +4,13 @@
     // File Layout
     "rootDir": ".",
     "outDir": "./dist",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
-    "module": "nodenext",
-    "target": "esnext",
+    "module": "es2022",
+    "target": "es2022",
     "types": [],
     // For nodejs:
     // "lib": ["esnext"],
@@ -33,8 +35,8 @@
     // "noPropertyAccessFromIndexSignature": true,
 
     // Recommended Options
+    "moduleResolution": "node",
     "strict": true,
-    "jsx": "react-jsx",
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,

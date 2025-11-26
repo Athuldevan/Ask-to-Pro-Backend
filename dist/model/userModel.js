@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 import bcrypt from "bcrypt";
+import crypto from "node:crypto";
 import { AppError } from "../utils/AppError.js";
 const userSchema = new Schema({
     name: {
@@ -29,6 +30,10 @@ const userSchema = new Schema({
         type: Number,
         default: 20,
     },
+    passwordResetToken: String,
+    passwordResetExpires: {
+        type: Date,
+    },
 }, { timestamps: true });
 ////////////////////////////////////////////////////////
 //hash password
@@ -43,6 +48,16 @@ userSchema.methods.verifyPassword = async function (enteredPassword) {
     if (!enteredPassword)
         throw new AppError(`Password field is missing`, 400);
     return await bcrypt.compare(enteredPassword, this.password);
+};
+//create resetPassword Token
+userSchema.methods.createResetPasswordToken = async function () {
+    const raw = crypto.randomBytes(32).toString("hex");
+    this.passwordResetToken = crypto
+        .createHash("sha256")
+        .update("raw")
+        .digest("hex");
+    this.passwordResetExpires = Date.now() + 1000 * 60 * 15; // 15 min
+    return raw; // sending this raw token to in email;
 };
 const User = mongoose.model("User", userSchema);
 export default User;
