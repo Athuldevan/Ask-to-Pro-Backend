@@ -5,4 +5,5 @@ export declare const login: (req: any, res: any, next: any) => void;
 export declare const refresh: (req: any, res: any, next: any) => void;
 export declare const logout: (req: any, res: any, next: any) => void;
 export declare const forgotPassword: (req: any, res: any, next: any) => void;
+export declare const resetPassword: (req: any, res: any, next: any) => void;
 //# sourceMappingURL=authController.d.ts.map

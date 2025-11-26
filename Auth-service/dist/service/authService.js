@@ -2,7 +2,6 @@ import { sendMail } from "../config/nodemailer.js";
 import { client } from "../config/redis.js";
 import User, {} from "../model/userModel.js";
 import { AppError } from "../utils/AppError.js";
-import { catchAsync } from "../utils/catchAsync.js";
 import { createResetPasswordToken } from "../utils/createResetPasswordToken.js";
 export async function createUser(name, email, password) {
     const data = await User.create({
@@ -28,6 +27,9 @@ export const requestResetPassword = async function (email) {
     if (!user)
         return;
     const resetPasswordToken = createResetPasswordToken(user?._id.toString());
+    //saving reset token in password
+    user.passwordResetToken = resetPasswordToken;
+    await user.save({ validateBeforeSave: false });
     const resetURL = `http://localhost:3000/reset-password/${resetPasswordToken}`;
     await sendMail({
         to: user.email,

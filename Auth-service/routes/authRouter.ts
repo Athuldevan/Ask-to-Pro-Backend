@@ -3,7 +3,9 @@ import {
   forgotPassword,
   login,
   logout,
+  refresh,
   register,
+  resetPassword,
   verifyUser,
 } from "../controller/authController.js";
 import { catchAsync } from "../utils/catchAsync.js";
@@ -12,7 +14,7 @@ import {
   registerSchema,
   verifyUserSchema,
 } from "../validations/authValidations.js";
-import { protect } from "../middlewares/protectMiddleware.js";
+
 
 const router = express.Router();
 router.post(
@@ -28,6 +30,8 @@ router.post(
 
 router.post("/login", login);
 router.post("/logout", logout);
-router.post("/forgot-password", protect, forgotPassword)
+router.post("/forgot-password", forgotPassword);
+router.post("/reset/:token", resetPassword);
+router.post("/refresh", refresh);
 
 export default router;

@@ -8,8 +8,5 @@ export const createResetPasswordToken = (userId: string) => {
     .createHmac("sha256", "bvhjsbgvhjsvhjib468b")
     .update(payload)
     .digest("hex");
-
-  console.log(signature);
-
   return `${payload}.${signature}`;
 };

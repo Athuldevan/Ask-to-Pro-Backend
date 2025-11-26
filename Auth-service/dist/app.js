@@ -4,7 +4,7 @@ const app = express();
 app.use(express.json());
 app.use("/api/v1/auth", authRouter);
 app.use((err, req, res, next) => {
-    err.statusCode = err.statusCode || 500;
+    err.statusCode = err.statusCode || 500 || 404;
     err.status = err.status || "error";
     err.data = err.data || null;
     res.status(err.statusCode).json({

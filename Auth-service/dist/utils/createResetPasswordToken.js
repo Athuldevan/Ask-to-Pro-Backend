@@ -6,7 +6,6 @@ export const createResetPasswordToken = (userId) => {
         .createHmac("sha256", "bvhjsbgvhjsvhjib468b")
         .update(payload)
         .digest("hex");
-    console.log(signature);
     return `${payload}.${signature}`;
 };
 //# sourceMappingURL=createResetPasswordToken.js.map
