@@ -1,0 +1,17 @@
+import mongoose from "mongoose";
+
+const DB_URL = process.env.MONGO_URL as string;
+
+export async function connectToDB() {
+  try {
+    const MONGO_URL = process.env.MONGO_URL;
+    if (!MONGO_URL)
+      throw new Error(`Database Url is missing in the .env file 💥💥💥💥`);
+    await mongoose.connect(MONGO_URL);
+    console.log(`Sucessfully Connected to Mongodb ✅`);
+  } catch (error:any) {
+    console.log(`Failed to connect to mongo DB 💥💥💥`, error.message);
+  }
+}
+
+

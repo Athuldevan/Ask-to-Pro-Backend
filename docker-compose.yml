@@ -1,21 +1,60 @@
 version: "3.8"
 
 services:
-  mongo:
+  # ==========================
+  # AUTH SERVICE
+  # ==========================
+  auth-service:
+    build: "./Auth-service"
+    container_name: Auth-service
+    ports:
+      - "4001:4000"
+    environment:
+      - MONGO_URL=mongodb://auth-mongo:27017/authDB
+      - REDIS_URL=redis://auth-redis:6379
+
+    depends_on:
+      - auth-mongo
+      - auth-redis
+
+  auth-mongo:
     image: mongo
-    container_name: ttp-mongo
+    container_name: auth-mongo
     restart: always
     ports:
       - "27017:27017"
     volumes:
-      - ask-to-pro-backend_mongo_data:/data/db  
+      - auth_mongo_data:/data/db
 
-  redis:
+  auth-redis:
     image: redis:alpine
-    container_name: ttp-redis
+    container_name: auth-redis
     restart: always
     ports:
       - "6379:6379"
 
+  # ==========================
+  # MENTOR SERVICE
+  # ==========================
+  # mentor-service:
+  #   build: "./Mentor-service"
+  #   container_name: ttp-mentor
+  #   ports:
+  #     - "4003:4000"
+  #   environment:
+  #     - MONGO_URL=mongodb://mentor-mongo:27017/mentorDB
+  #   depends_on:
+  #     - mentor-mongo
+
+  # mentor-mongo:
+  #   image: mongo
+  #   container_name: mentor-mongo
+  #   restart: always
+  #   ports:
+  #     - "27018:27017"
+  #   volumes:
+  #     - mentor_mongo_data:/data/db
+
 volumes:
-  ask-to-pro-backend_mongo_data:  
+  auth_mongo_data:
+  # mentor_mongo_data:
