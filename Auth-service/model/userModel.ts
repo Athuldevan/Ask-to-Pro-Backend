@@ -6,6 +6,7 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
+  image: string;
   isPremium: boolean;
   role: "user" | "admin";
   chatMessageCount: number;
@@ -40,6 +41,11 @@ const userSchema = new Schema<IUser>(
       default: false,
     },
 
+    image: {
+      type: String,
+      default: "https://37assets.37signals.com/svn/765-default-avatar.png",
+    },
+
     role: {
       type: String,
       enum: ["user", "admin"],
@@ -62,12 +68,10 @@ const userSchema = new Schema<IUser>(
 ////////////////////////////////////////////////////////
 
 //hash password
-userSchema.pre<IUser>("save",  async function () {
-  if (!this.isModified("password")) return 
-  this.password =  await bcrypt.hash(this.password, 6);
-  
+userSchema.pre<IUser>("save", async function () {
+  if (!this.isModified("password")) return;
+  this.password = await bcrypt.hash(this.password, 6);
 });
-
 
 //Verify password;
 userSchema.methods.verifyPassword = async function (
