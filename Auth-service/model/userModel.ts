@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, mongo } from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "node:crypto";
 
@@ -62,11 +62,12 @@ const userSchema = new Schema<IUser>(
 ////////////////////////////////////////////////////////
 
 //hash password
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 6);
-  next();
+userSchema.pre<IUser>("save",  async function () {
+  if (!this.isModified("password")) return 
+  this.password =  await bcrypt.hash(this.password, 6);
+  
 });
+
 
 //Verify password;
 userSchema.methods.verifyPassword = async function (

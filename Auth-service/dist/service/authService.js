@@ -7,7 +7,7 @@ export async function createUser(name, email, password) {
     const data = await User.create({
         name,
         email,
-        password,
+        password: password,
     });
     return data;
 }

@@ -5,7 +5,7 @@ import { validate } from "../middlewares/joiValidation.js";
 import { registerSchema, verifyUserSchema, } from "../validations/authValidations.js";
 const router = express.Router();
 router.post("/register", validate({ type: "body", schema: registerSchema }), register);
-router.post("/verify", validate({ type: "body", schema: verifyUserSchema }), catchAsync(verifyUser));
+router.post("/verify", validate({ type: "body", schema: verifyUserSchema }), verifyUser);
 router.post("/login", login);
 router.post("/logout", logout);
 router.post("/forgot-password", forgotPassword);

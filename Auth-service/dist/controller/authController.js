@@ -5,7 +5,7 @@ import { client } from "../config/redis.js";
 import User from "../model/userModel.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import { generateAcessToken, generateRefreshToken } from "../utils/token.js";
-import RefreshToken from "../model/refreshTokenModel.js";
+import RefreshToken, {} from "../model/refreshTokenModel.js";
 // -------------------------- REGISTER --------------------------------
 export const register = async function (req, res) {
     const { name, email, password } = req.body;
@@ -23,7 +23,7 @@ export const register = async function (req, res) {
     });
 };
 // Verifiying User
-export const verifyUser = async function (req, res) {
+export const verifyUser = catchAsync(async function (req, res, next) {
     const { enteredOtp, email } = req.body;
     if (!enteredOtp || !email)
         throw new AppError(`Missing fileds otp or email`, 400);
@@ -46,7 +46,7 @@ export const verifyUser = async function (req, res) {
         message: "Sucessfully Registered",
         user,
     });
-};
+});
 // -------------------------- LOGIN ---------------------------------
 export const login = catchAsync(async function (req, res, next) {
     const { email, password } = req.body;
@@ -65,8 +65,9 @@ export const login = catchAsync(async function (req, res, next) {
         user: user._id,
         token: refreshToken,
         expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), //7 days
-        userAgent: req.headers["user-agent"],
-        ip: req.ip,
+        userAgent: req.headers["user-agent"] || undefined,
+        ip: req.ip ?? undefined,
+        revoked: false,
     });
     res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -74,6 +75,12 @@ export const login = catchAsync(async function (req, res, next) {
         sameSite: "strict",
         maxAge: 1000 * 60 * 60 * 24 * 7,
     });
+    if (user.role === "admin") {
+        return res.status(200).json({
+            status: "sucess",
+            message: "You are sucessfully logged in as admin",
+        });
+    }
     return res.status(200).json({
         status: "sucess",
         message: "You are sucessfully Logged in ",
@@ -168,7 +175,7 @@ export const resetPassword = catchAsync(async function (req, res, next) {
     await user.save();
     res.status(200).json({
         status: "sucess",
-        message: "Password reset sucessfull.You can now log in with your new password"
+        message: "Password reset sucessfull.You can now log in with your new password",
     });
 });
 //# sourceMappingURL=authController.js.map

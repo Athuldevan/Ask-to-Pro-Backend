@@ -25,7 +25,7 @@ router.post(
 router.post(
   "/verify",
   validate({ type: "body", schema: verifyUserSchema }),
-  catchAsync(verifyUser)
+verifyUser
 );
 
 router.post("/login", login);

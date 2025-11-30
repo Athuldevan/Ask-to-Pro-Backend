@@ -6,7 +6,9 @@ import { client } from "../config/redis.js";
 import User from "../model/userModel.js";
 import { catchAsync } from "../utils/catchAsync.js";
 import { generateAcessToken, generateRefreshToken } from "../utils/token.js";
-import RefreshToken from "../model/refreshTokenModel.js";
+import RefreshToken, {
+  type IRefreshToken,
+} from "../model/refreshTokenModel.js";
 
 // -------------------------- REGISTER --------------------------------
 export const register = async function (req: Request, res: Response) {
@@ -32,7 +34,11 @@ export const register = async function (req: Request, res: Response) {
 };
 
 // Verifiying User
-export const verifyUser = async function (req: Request, res: Response) {
+export const verifyUser = catchAsync(async function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   const { enteredOtp, email } = req.body;
   if (!enteredOtp || !email)
     throw new AppError(`Missing fileds otp or email`, 400);
@@ -62,7 +68,7 @@ export const verifyUser = async function (req: Request, res: Response) {
     message: "Sucessfully Registered",
     user,
   });
-};
+});
 
 // -------------------------- LOGIN ---------------------------------
 
@@ -81,16 +87,17 @@ export const login = catchAsync(async function (
   const isPassowrdValid = await user.verifyPassword(password);
   if (!isPassowrdValid) throw new AppError("Invalid password", 400);
 
-  const acessToken = await generateAcessToken(user._id);
-  const refreshToken = await generateRefreshToken(user._id);
+  const acessToken = await generateAcessToken(user._id, user.role);
+  const refreshToken = await generateRefreshToken(user._id, user?.role);
 
   await RefreshToken.create({
     user: user._id,
-    token: refreshToken,
+    token: refreshToken!,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), //7 days
-    userAgent: req.headers["user-agent"],
-    ip: req.ip,
-  });
+    userAgent: req.headers["user-agent"] || undefined,
+    ip: req.ip ?? undefined,
+    revoked: false,
+  } as IRefreshToken);
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: true,
@@ -123,8 +130,8 @@ export const refresh = catchAsync(async function (req: Request, res: Response) {
   if (!user) throw new AppError("User not found", 401);
 
   // Generating a new Token
-  const acessToken = await generateAcessToken(user._id);
-  const newRefreshToken = await generateRefreshToken(user._id);
+  const acessToken = await generateAcessToken(user._id, user?.role);
+  const newRefreshToken = await generateRefreshToken(user._id, user?.role);
 
   // Rotation
   existingToken.revoked = true;
@@ -136,7 +143,7 @@ export const refresh = catchAsync(async function (req: Request, res: Response) {
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     ip: req.ip,
     userAgent: req.headers["user-agent"],
-  });
+  } as IRefreshToken);
 
   res.cookie("refreshToken", newRefreshToken, {
     httpOnly: true,
@@ -212,7 +219,8 @@ export const resetPassword = catchAsync(async function (
   await user.save();
 
   res.status(200).json({
-    status : "sucess",
-    message : "Password reset sucessfull.You can now log in with your new password"
-  })
+    status: "sucess",
+    message:
+      "Password reset sucessfull.You can now log in with your new password",
+  });
 });

@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema, Document, mongo } from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "node:crypto";
 import { AppError } from "../utils/AppError.js";
@@ -37,11 +37,10 @@ const userSchema = new Schema({
 }, { timestamps: true });
 ////////////////////////////////////////////////////////
 //hash password
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
     if (!this.isModified("password"))
-        return next();
+        return;
     this.password = await bcrypt.hash(this.password, 6);
-    next();
 });
 //Verify password;
 userSchema.methods.verifyPassword = async function (enteredPassword) {

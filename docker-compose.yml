@@ -8,7 +8,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongo_data:/data/db
+      - ask-to-pro-backend_mongo_data:/data/db  
 
   redis:
     image: redis:alpine
@@ -18,4 +18,4 @@ services:
       - "6379:6379"
 
 volumes:
-  mongo_data:
+  ask-to-pro-backend_mongo_data:  

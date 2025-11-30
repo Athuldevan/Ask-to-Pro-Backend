@@ -7,10 +7,10 @@ export interface IRefreshToken extends Document {
     userAgent?: string;
     ip?: string;
 }
-declare const RefreshToken: mongoose.Model<IRefreshToken, {}, {}, {}, mongoose.Document<unknown, {}, IRefreshToken, {}, {}> & IRefreshToken & Required<{
+declare const RefreshToken: mongoose.Model<IRefreshToken, {}, {}, {}, mongoose.Document<unknown, {}, IRefreshToken, {}, mongoose.DefaultSchemaOptions> & IRefreshToken & Required<{
     _id: mongoose.Types.ObjectId;
 }> & {
     __v: number;
-}, any>;
+}, any, IRefreshToken>;
 export default RefreshToken;
 //# sourceMappingURL=refreshTokenModel.d.ts.map

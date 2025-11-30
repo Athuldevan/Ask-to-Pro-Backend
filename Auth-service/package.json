@@ -7,14 +7,19 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "node dist/server.js",
-     "dev": "npm run build && nodemon dist/server.js"
-
+    "dev": "npm run build && nodemon dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.5",
+    "@types/joi": "^17.2.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^24.10.1",
     "@types/nodemailer": "^7.0.4",
     "concurrently": "^9.2.1",
     "nodemon": "^3.1.11",
@@ -23,9 +28,12 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
     "joi": "^18.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.0.0",
     "nodemailer": "^7.0.10",
     "redis": "^5.10.0"
   }
