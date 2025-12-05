@@ -4,7 +4,7 @@ import { AppError } from "../utils/AppError";
 import { tryCatch } from "../utils/tryCatch";
 
 interface TokenPayload extends jwt.JwtPayload {
-  id?:string
+  id:string
   role:string;
   
 }
