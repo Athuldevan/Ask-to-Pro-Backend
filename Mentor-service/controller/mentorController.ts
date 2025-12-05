@@ -46,7 +46,7 @@ export const getPendingMentors =  tryCatch(async function(req:Request,res:Respon
 export const  approveMentors = tryCatch(async function(req:Request,res:Response,next:NextFunction) {
   const {id, status} = req.params;
   const mentor = await Mentor.findByIdAndUpdate({_id:id}, {
-    verificationStatus:true,
+    verificationStatus:"approved",
     isVerified:true,
 
   },{new:true});
