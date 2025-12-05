@@ -1,8 +1,10 @@
 import express from "express"
+import cookiParser from "cookie-parser"
 import type { Request, Response, NextFunction } from "express";
 import authRouter from "./routes/authRouter.js";
 const app = express();
 app.use(express.json());
+app.use(cookiParser())
 
 app.use("/api/v1/auth", authRouter);
 

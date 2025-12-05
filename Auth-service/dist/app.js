@@ -1,7 +1,9 @@
 import express from "express";
+import cookiParser from "cookie-parser";
 import authRouter from "./routes/authRouter.js";
 const app = express();
 app.use(express.json());
+app.use(cookiParser());
 app.use("/api/v1/auth", authRouter);
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500 || 404;
