@@ -8,7 +8,6 @@ import {
   resetPassword,
   verifyUser,
 } from "../controller/authController.js";
-import { catchAsync } from "../utils/catchAsync.js";
 import { validate } from "../middlewares/joiValidation.js";
 import {
   registerSchema,

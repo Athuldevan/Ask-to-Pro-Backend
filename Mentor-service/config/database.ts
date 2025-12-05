@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const DB_URL = process.env.MONGO_URL as string;
 
+
+
 export async function connectToDB() {
   try {
     const MONGO_URL = process.env.MONGO_URL;

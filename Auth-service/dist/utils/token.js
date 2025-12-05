@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 export const generateAcessandRefreshToken = async function () { };
 /// Generate the acess token
-export const generateAcessToken = async function (userId) {
+export const generateAcessToken = async function (userId, role) {
     try {
-        const acessToken = await jwt.sign({ id: userId }, "ACESSTOKENSECRET", {
+        const acessToken = await jwt.sign({ id: userId, role }, "ACESSTOKENSECRET", {
             expiresIn: "5m",
         });
         return acessToken;
@@ -13,9 +13,9 @@ export const generateAcessToken = async function (userId) {
     }
 };
 // Generate Refresh Token
-export const generateRefreshToken = async function (userId) {
+export const generateRefreshToken = async function (userId, role) {
     try {
-        const refreshToken = jwt.sign({ id: userId }, "REFRESHTOKENSECRET");
+        const refreshToken = jwt.sign({ id: userId, role }, "REFRESHTOKENSECRET");
         return refreshToken;
     }
     catch (err) {

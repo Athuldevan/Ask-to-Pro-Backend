@@ -8,10 +8,14 @@ services:
     build: "./Auth-service"
     container_name: Auth-service
     ports:
-      - "4001:4000"
+      - "4000:4000"
     environment:
       - MONGO_URL=mongodb://auth-mongo:27017/authDB
       - REDIS_URL=redis://auth-redis:6379
+      - APP_PASSWORD=vtbytwkofwmbmugg
+      - EMAIL_USER=developer.athul.mern@gmail.com
+      - EMAIL_PASS=vtbytwkofwmbmugg
+      - JWT_SECRET=yourSecret
 
     depends_on:
       - auth-mongo
@@ -19,7 +23,7 @@ services:
 
   auth-mongo:
     image: mongo
-    container_name: auth-mongo
+    container_name: auth-DB
     restart: always
     ports:
       - "27017:27017"

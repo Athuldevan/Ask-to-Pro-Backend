@@ -1,6 +1,5 @@
 import express from "express";
 import { forgotPassword, login, logout, refresh, register, resetPassword, verifyUser, } from "../controller/authController.js";
-import { catchAsync } from "../utils/catchAsync.js";
 import { validate } from "../middlewares/joiValidation.js";
 import { registerSchema, verifyUserSchema, } from "../validations/authValidations.js";
 const router = express.Router();

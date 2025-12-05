@@ -17,6 +17,7 @@ interface IMentor extends Document {
   price: number;
 
   isVerified: boolean;
+  profileCompleted : boolean,
   verificationStatus: "pending" | "approved" | "rejected";
 
   avgRating: number;
@@ -92,6 +93,11 @@ const mentorSchema = new mongoose.Schema<IMentor>({
     enum: ["pending", "approved", "rejected"],
     default: "pending",
   },
+
+  profileCompleted: {
+  type: Boolean,
+  default: false
+},
 
   avgRating: {
     type: Number,

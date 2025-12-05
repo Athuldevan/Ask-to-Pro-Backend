@@ -21,9 +21,13 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    image: {
+        type: String,
+        default: "https://37assets.37signals.com/svn/765-default-avatar.png",
+    },
     role: {
         type: String,
-        enum: ["user", "admin"],
+        enum: ["user", "admin", "mentor"],
         default: "user",
     },
     chatMessageCount: {

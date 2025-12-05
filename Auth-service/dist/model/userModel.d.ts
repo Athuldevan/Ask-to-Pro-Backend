@@ -3,6 +3,7 @@ export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
+    image: string;
     isPremium: boolean;
     role: "user" | "admin";
     chatMessageCount: number;

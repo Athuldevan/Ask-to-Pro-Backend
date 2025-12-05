@@ -8,13 +8,13 @@ import { generateAcessToken, generateRefreshToken } from "../utils/token.js";
 import RefreshToken, {} from "../model/refreshTokenModel.js";
 // -------------------------- REGISTER --------------------------------
 export const register = async function (req, res) {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     if (!name || !email || !password)
         throw new AppError(`Please provide all credentials`, 400);
     const otp = await sendOtp(email);
     // storing the otp in redis for few mins 5 minuted
     await client.set(`otp:${email}`, otp, { EX: 300 });
-    await client.set(`registerData:${email}`, JSON.stringify({ name, email, password }), {
+    await client.set(`registerData:${email}`, JSON.stringify({ name, email, password, role }), {
         EX: 600,
     });
     return res.status(201).json({
@@ -33,11 +33,12 @@ export const verifyUser = catchAsync(async function (req, res, next) {
     const data = await client.get(`registerData:${email}`);
     if (!data)
         throw new AppError("Registration data expired. Please register again.", 400);
-    const { name, password } = JSON.parse(data);
+    const { name, password, role } = JSON.parse(data);
     const user = await User.create({
         name,
         email,
         password,
+        role
     });
     await client.del(`otp:${email}`);
     await client.del(`registerData:${email}`);
@@ -59,8 +60,8 @@ export const login = catchAsync(async function (req, res, next) {
     const isPassowrdValid = await user.verifyPassword(password);
     if (!isPassowrdValid)
         throw new AppError("Invalid password", 400);
-    const acessToken = await generateAcessToken(user._id);
-    const refreshToken = await generateRefreshToken(user._id);
+    const acessToken = await generateAcessToken(user._id, user.role);
+    const refreshToken = await generateRefreshToken(user._id, user?.role);
     await RefreshToken.create({
         user: user._id,
         token: refreshToken,
@@ -75,12 +76,6 @@ export const login = catchAsync(async function (req, res, next) {
         sameSite: "strict",
         maxAge: 1000 * 60 * 60 * 24 * 7,
     });
-    if (user.role === "admin") {
-        return res.status(200).json({
-            status: "sucess",
-            message: "You are sucessfully logged in as admin",
-        });
-    }
     return res.status(200).json({
         status: "sucess",
         message: "You are sucessfully Logged in ",
@@ -106,8 +101,8 @@ export const refresh = catchAsync(async function (req, res) {
     if (!user)
         throw new AppError("User not found", 401);
     // Generating a new Token
-    const acessToken = await generateAcessToken(user._id);
-    const newRefreshToken = await generateRefreshToken(user._id);
+    const acessToken = await generateAcessToken(user._id, user?.role);
+    const newRefreshToken = await generateRefreshToken(user._id, user?.role);
     // Rotation
     existingToken.revoked = true;
     await existingToken.save();

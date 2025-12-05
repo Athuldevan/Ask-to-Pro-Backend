@@ -12,7 +12,7 @@ import RefreshToken, {
 
 // -------------------------- REGISTER --------------------------------
 export const register = async function (req: Request, res: Response) {
-  const { name, email, password } = req.body;
+  const { name, email, password,role } = req.body;
   if (!name || !email || !password)
     throw new AppError(`Please provide all credentials`, 400);
   const otp = await sendOtp(email);
@@ -21,7 +21,7 @@ export const register = async function (req: Request, res: Response) {
   await client.set(`otp:${email}`, otp, { EX: 300 });
   await client.set(
     `registerData:${email}`,
-    JSON.stringify({ name, email, password }),
+    JSON.stringify({ name, email, password,role }),
     {
       EX: 600,
     }
@@ -53,11 +53,12 @@ export const verifyUser = catchAsync(async function (
       400
     );
 
-  const { name, password } = JSON.parse(data);
+  const { name, password,role } = JSON.parse(data);
   const user = await User.create({
     name,
     email,
     password,
+    role
   });
 
   await client.del(`otp:${email}`);
