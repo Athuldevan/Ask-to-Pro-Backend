@@ -3,7 +3,7 @@ import { tryCatch } from "../utils/tryCatch";
 import { AuthRequest } from "../middleware/ProtectMiddleware";
 import { AppError } from "../utils/AppError";
 import Mentor from "../model/mentorModel";
-import { createMentor } from "../services/mentorService";
+import { createMentor, getAllApprovedMentorService } from "../services/mentorService";
 
 // Get Profile
 export const createMentorProfile = tryCatch(async function (
@@ -80,5 +80,14 @@ export const rejectMentor = tryCatch( async function(req:Request,res:Response,ne
     message:"Mentor Rejected",
     mentor,
 
+  })
+})
+
+//Get all Mentors
+export const getApprovedMentors = tryCatch(async function(req:Request,res:Response,next:NextFunction) {
+  const mentors = await getAllApprovedMentorService();
+  return res.status(200).json({
+    status :'sucess',
+    mentors,
   })
 })

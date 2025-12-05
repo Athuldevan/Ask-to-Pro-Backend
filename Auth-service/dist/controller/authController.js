@@ -86,7 +86,6 @@ export const login = catchAsync(async function (req, res, next) {
 // -------------------------- REFRESH TOKEN CONTROLLR --------------------------
 export const refresh = catchAsync(async function (req, res) {
     const refreshToken = req.cookies?.refreshToken;
-    console.log(req.cookies);
     if (!refreshToken)
         throw new AppError("No Refresh Token found", 401);
     // Finding in DB

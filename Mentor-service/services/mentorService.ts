@@ -1,5 +1,3 @@
-import { NextFunction } from "express";
-
 import { AppError } from "../utils/AppError";
 import Mentor from "../model/mentorModel";
 
@@ -36,3 +34,16 @@ export const createMentor = async function (userId: string, data: mentorData) {
 
   return Mentor;
 };
+
+
+// Get all mentors
+export const getAllApprovedMentorService = async function(){
+  try {
+    const mentors = await Mentor.find({verificationStatus:"approved", isVerified:true});
+
+    return mentors;
+     
+  } catch(err:any){
+    console.log(err.message)
+  }
+}
