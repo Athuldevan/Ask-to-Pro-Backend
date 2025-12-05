@@ -5,7 +5,7 @@ import { createMentorProfile, getApprovedMentors, getMentor } from "../controlle
 const router = express.Router();
 router.post("/createProfile", protect,createMentorProfile)
 router.get("/getAllMentors",protect,getApprovedMentors);
-router.get("/getMentor/:id", protect, getMentorg)
+router.get("/getMentor/:id", protect, getMentor)
 
 
 export default router;
