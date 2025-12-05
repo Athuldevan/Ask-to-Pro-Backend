@@ -35,15 +35,26 @@ export const createMentor = async function (userId: string, data: mentorData) {
   return Mentor;
 };
 
-
 // Get all mentors
-export const getAllApprovedMentorService = async function(){
+export const getAllApprovedMentorService = async function () {
   try {
-    const mentors = await Mentor.find({verificationStatus:"approved", isVerified:true});
+    const mentors = await Mentor.find({
+      verificationStatus: "approved",
+      isVerified: true,
+    });
 
     return mentors;
-     
-  } catch(err:any){
-    console.log(err.message)
+  } catch (err: any) {
+    console.log(err.message);
   }
-}
+};
+
+//Get a single Mentor By Id
+export const getSingleMentorById = async function (id: string) {
+  try {
+    const mentor = await Mentor.findById(id);
+    return mentor;
+  } catch (err: any) {
+    console.log(err.message);
+  }
+};

@@ -3,7 +3,7 @@ import { tryCatch } from "../utils/tryCatch";
 import { AuthRequest } from "../middleware/ProtectMiddleware";
 import { AppError } from "../utils/AppError";
 import Mentor from "../model/mentorModel";
-import { createMentor, getAllApprovedMentorService } from "../services/mentorService";
+import { createMentor, getAllApprovedMentorService, getSingleMentorById } from "../services/mentorService";
 
 // Get Profile
 export const createMentorProfile = tryCatch(async function (
@@ -89,5 +89,17 @@ export const getApprovedMentors = tryCatch(async function(req:Request,res:Respon
   return res.status(200).json({
     status :'sucess',
     mentors,
+  })
+})
+
+
+//Get A Single Mentor
+export const  getMentor = tryCatch(async(req:Request, res:Response, next:NextFunction)=>{
+  const {id} = req.params;
+  const mentor = await getSingleMentorById(id);
+  if(!mentor) throw new AppError('No Mentor found', 404);
+  return res.status(200).json({
+    status:"sucess",
+    mentor,
   })
 })
