@@ -3,8 +3,8 @@
     import { AppError } from "../utils/AppError";
     import { AuthRequest } from "../middleware/ProtectMiddleware";
     import Slot from "../model/slotModel";
-    import mongoose from "mongoose";
 
+    // Create Slot
     export const createSlot = tryCatch(async function(req:AuthRequest, res:Response,next:NextFunction) {
        const mentorId = req.user!.id;
 
@@ -16,7 +16,6 @@
             throw new AppError("Please Provide date and time", 400 )
         };
 
-        // / Prevent overlapping slot creation (same date & overlapping time)
 
     const existing = await Slot.findOne({
         mentorId,
@@ -42,4 +41,18 @@
             slots
         })
 
+    })
+
+    //Get All Slots for mentors;
+    export const getSlotForMentor = tryCatch(async function(req:Request,res:Response,next:NextFunction) {
+        const {mentorId} = req.params;
+        const slots = await Slot.find({
+            mentorId,
+            isBooked : false
+        });
+        return res.status(200).json({
+            status : "sucess",
+            total : slots.length,
+            slots,
+        })
     })

@@ -7,7 +7,7 @@ export const generateAcessandRefreshToken = async function () {};
 export const generateAcessToken = async function (userId: any, role:string) {
   try {
     const acessToken = await jwt.sign({ id: userId ,role}, "ACESSTOKENSECRET", {
-      expiresIn: "5m",
+      expiresIn: "20m",
     });
     return acessToken;
   } catch (err: any) {
