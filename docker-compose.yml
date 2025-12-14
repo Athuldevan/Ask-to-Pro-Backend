@@ -15,7 +15,7 @@ services:
       - APP_PASSWORD=vtbytwkofwmbmugg
       - EMAIL_USER=developer.athul.mern@gmail.com
       - EMAIL_PASS=vtbytwkofwmbmugg
-      - JWT_SECRET=yourSecret
+      - JWT_SECRET=yourSecret                 
 
     depends_on:
       - auth-mongo

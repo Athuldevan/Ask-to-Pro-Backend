@@ -7,13 +7,14 @@ import {
   register,
   resetPassword,
   verifyUser,
+  viewProfile,
 } from "../controller/authController.js";
 import { validate } from "../middlewares/joiValidation.js";
 import {
   registerSchema,
   verifyUserSchema,
 } from "../validations/authValidations.js";
-
+import { protect } from "../middlewares/protectMiddleware.js";
 
 const router = express.Router();
 router.post(
@@ -24,7 +25,7 @@ router.post(
 router.post(
   "/verify",
   validate({ type: "body", schema: verifyUserSchema }),
-verifyUser
+  verifyUser
 );
 
 router.post("/login", login);
@@ -32,5 +33,6 @@ router.post("/logout", logout);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset/:token", resetPassword);
 router.post("/refresh", refresh);
+router.get("/me", protect, viewProfile);
 
 export default router;

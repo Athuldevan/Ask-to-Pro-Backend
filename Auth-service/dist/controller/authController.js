@@ -1,4 +1,5 @@
 import { AppError } from "../utils/AppError.js";
+import { response, } from "express";
 import { requestResetPassword, verifyOtp } from "../service/authService.js";
 import { sendOtp } from "../utils/otp.js";
 import { client } from "../config/redis.js";
@@ -38,7 +39,7 @@ export const verifyUser = catchAsync(async function (req, res, next) {
         name,
         email,
         password,
-        role
+        role,
     });
     await client.del(`otp:${email}`);
     await client.del(`registerData:${email}`);
@@ -171,6 +172,17 @@ export const resetPassword = catchAsync(async function (req, res, next) {
     res.status(200).json({
         status: "sucess",
         message: "Password reset sucessfull.You can now log in with your new password",
+    });
+});
+//See the profile
+export const viewProfile = catchAsync(async (req, res, next) => {
+    const userId = req.user?.id;
+    if (!userId)
+        throw new AppError("You are not logged in.Please Log in first.", 401);
+    const user = await User.findById(userId);
+    return res.status(200).json({
+        status: "sucess",
+        user,
     });
 });
 //# sourceMappingURL=authController.js.map

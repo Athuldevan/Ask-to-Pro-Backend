@@ -1,5 +1,10 @@
 import { AppError } from "../utils/AppError.js";
-import type { Response, Request, NextFunction } from "express";
+import {
+  type Response,
+  type Request,
+  type NextFunction,
+  response,
+} from "express";
 import { requestResetPassword, verifyOtp } from "../service/authService.js";
 import { sendOtp } from "../utils/otp.js";
 import { client } from "../config/redis.js";
@@ -12,7 +17,7 @@ import RefreshToken, {
 
 // -------------------------- REGISTER --------------------------------
 export const register = async function (req: Request, res: Response) {
-  const { name, email, password,role } = req.body;
+  const { name, email, password, role } = req.body;
   if (!name || !email || !password)
     throw new AppError(`Please provide all credentials`, 400);
   const otp = await sendOtp(email);
@@ -21,7 +26,7 @@ export const register = async function (req: Request, res: Response) {
   await client.set(`otp:${email}`, otp, { EX: 300 });
   await client.set(
     `registerData:${email}`,
-    JSON.stringify({ name, email, password,role }),
+    JSON.stringify({ name, email, password, role }),
     {
       EX: 600,
     }
@@ -53,12 +58,12 @@ export const verifyUser = catchAsync(async function (
       400
     );
 
-  const { name, password,role } = JSON.parse(data);
+  const { name, password, role } = JSON.parse(data);
   const user = await User.create({
     name,
     email,
     password,
-    role
+    role,
   });
 
   await client.del(`otp:${email}`);
@@ -225,3 +230,17 @@ export const resetPassword = catchAsync(async function (
       "Password reset sucessfull.You can now log in with your new password",
   });
 });
+
+//See the profile
+export const viewProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.user?.id;
+    if (!userId)
+      throw new AppError("You are not logged in.Please Log in first.", 401);
+    const user = await User.findById(userId);
+    return res.status(200).json({
+      status: "sucess",
+      user,
+    });
+  }
+);
