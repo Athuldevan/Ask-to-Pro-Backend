@@ -6,7 +6,6 @@ const app = express();
 const clinetUrl = process.env.CLIENT_URL;
 if (!clinetUrl)
     console.log(`Client url is missing in the env file `);
-console.log("CLIENT URL-------", clinetUrl);
 app.use(cors({
     origin: clinetUrl,
     credentials: true,
