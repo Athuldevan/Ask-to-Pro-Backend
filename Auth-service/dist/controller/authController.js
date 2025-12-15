@@ -61,7 +61,7 @@ export const login = catchAsync(async function (req, res, next) {
     const isPassowrdValid = await user.verifyPassword(password);
     if (!isPassowrdValid)
         throw new AppError("Invalid password", 400);
-    const acessToken = await generateAcessToken(user._id, user.role);
+    const accessToken = await generateAcessToken(user._id, user.role);
     const refreshToken = await generateRefreshToken(user._id, user?.role);
     await RefreshToken.create({
         user: user._id,
@@ -81,7 +81,7 @@ export const login = catchAsync(async function (req, res, next) {
         status: "sucess",
         message: "You are sucessfully Logged in ",
         user,
-        acessToken,
+        accessToken,
     });
 });
 // -------------------------- REFRESH TOKEN CONTROLLR --------------------------
@@ -102,7 +102,7 @@ export const refresh = catchAsync(async function (req, res) {
     if (!user)
         throw new AppError("User not found", 401);
     // Generating a new Token
-    const acessToken = await generateAcessToken(user._id, user?.role);
+    const accessToken = await generateAcessToken(user._id, user?.role);
     const newRefreshToken = await generateRefreshToken(user._id, user?.role);
     // Rotation
     existingToken.revoked = true;
@@ -123,7 +123,7 @@ export const refresh = catchAsync(async function (req, res) {
     return res.status(200).json({
         status: "sucess",
         message: "Sucessfully logged in ",
-        acessToken,
+        accessToken,
     });
 });
 // -------------------------- LOGOUT ------------------------------

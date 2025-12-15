@@ -93,7 +93,7 @@ export const login = catchAsync(async function (
   const isPassowrdValid = await user.verifyPassword(password);
   if (!isPassowrdValid) throw new AppError("Invalid password", 400);
 
-  const acessToken = await generateAcessToken(user._id, user.role);
+  const accessToken = await generateAcessToken(user._id, user.role);
   const refreshToken = await generateRefreshToken(user._id, user?.role);
 
   await RefreshToken.create({
@@ -114,7 +114,7 @@ export const login = catchAsync(async function (
     status: "sucess",
     message: "You are sucessfully Logged in ",
     user,
-    acessToken,
+    accessToken,
   });
 });
 
@@ -136,7 +136,7 @@ export const refresh = catchAsync(async function (req: Request, res: Response) {
   if (!user) throw new AppError("User not found", 401);
 
   // Generating a new Token
-  const acessToken = await generateAcessToken(user._id, user?.role);
+  const accessToken = await generateAcessToken(user._id, user?.role);
   const newRefreshToken = await generateRefreshToken(user._id, user?.role);
 
   // Rotation
@@ -161,7 +161,7 @@ export const refresh = catchAsync(async function (req: Request, res: Response) {
   return res.status(200).json({
     status: "sucess",
     message: "Sucessfully logged in ",
-    acessToken,
+    accessToken,
   });
 });
 
