@@ -6,30 +6,23 @@ import Mentor from "../model/mentorModel";
 import { createMentor, getAllApprovedMentorService, getSingleMentorById } from "../services/mentorService";
 
 // Get Profile
-export const createMentorProfile = tryCatch(async function (
+export const createMentorProfile = tryCatch(async (
   req: AuthRequest,
-  res: Response,
-  next: NextFunction
-) {
+  res: Response
+) => {
   const userId = req.user?.id;
-  if (!userId) throw new AppError("NO TOKEN FOUND.UNAUTHORIZED", 401);
-
-  const isMentorExists = await Mentor.findOne({ userId });
-  if (isMentorExists) throw new AppError("No Mentor Found", 400);
+  if (!userId) throw new AppError("Unauthorized", 401);
 
   const mentor = await createMentor(userId, req.body);
-  res.status(200).json({
-    status: "sucess",
-    message: "Mentor Profile Created Sucessfully",
-    mentor,
-  });
 
-  return res.status(200).json({
-    status: "Sucess",
-    message: "mentor service created Sucessfully",
-    mentor,
+  return res.status(201).json({
+    status: "success",
+    message: "Mentor profile created successfully",
+    mentor
   });
 });
+
+
 
 //Get Pending Mentotrs
 export const getPendingMentors =  tryCatch(async function(req:Request,res:Response,next:NextFunction) {
