@@ -136,4 +136,5 @@ const mentorSchema = new Schema<IMentor>(
   { timestamps: true }
 );
 
-export default mongoose.model<IMentor>("Mentor", mentorSchema);
+const Mentor = mongoose.model<IMentor>("Mentor", mentorSchema);
+export default Mentor;

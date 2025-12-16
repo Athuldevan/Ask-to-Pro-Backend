@@ -1,13 +1,19 @@
-import  express, { Router } from "express";
+import express, { Router } from "express";
 import { protect } from "../middleware/ProtectMiddleware";
+import {
+  createMentorProfile,
+  getApprovedMentors,
+  getMentor,
+} from "../controller/mentorController";
+import { createSlot, getAllSlots } from "../controller/slotController";
 
-import { createMentorProfile, getApprovedMentors, getMentor } from "../controller/mentorController";
-import { createSlot, getSlotForMentor } from "../controller/slotController";
 const router = express.Router();
-router.post("/createProfile", protect,createMentorProfile)
-router.get("/getAllMentors",protect,getApprovedMentors);
-router.get("/getMentor/:id", protect, getMentor);
-router.get("/:mentorId/slots", protect,getSlotForMentor);
-router.post("/slots",protect,createSlot);
+router.use(protect);
+
+router.post("/createProfile", createMentorProfile);
+router.get("/getAllMentors", getApprovedMentors);
+router.get("/getMentor/:id", getMentor);
+router.get("/:mentorId/slots", getAllSlots);
+router.post("/slots", createSlot);
 
 export default router;
