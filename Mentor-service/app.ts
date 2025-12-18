@@ -1,21 +1,13 @@
 import express, { NextFunction, Request, Response } from "express";
 import mentorRouter from "./routes/mentorRouter";
 import adminRouter from "./routes/adminRouter";
-import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config()
 
 const app = express();
-const clinetUrl = process.env.CLIENT_URL;
-if (!clinetUrl) console.log(`Client url is missing in the env file `);
-app.use(
-  cors({
-    origin: clinetUrl,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+
+// CORS and JWT validation are now handled by API Gateway
+// Keeping minimal setup for internal service-to-service communication
 app.use(express.json());
 app.use("/api/v1/mentor", mentorRouter);
 app.use("/api/v1/admin", adminRouter);

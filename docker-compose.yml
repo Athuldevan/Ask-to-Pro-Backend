@@ -1,64 +1,41 @@
-version: "3.8"
-
 services:
-  # ==========================
-  # AUTH SERVICE
-  # ==========================
-  auth-service:
-    build: "./Auth-service"
-    container_name: Auth-service
+  api-gateway:
+    build: ./API-Gateway
+    container_name: api-gateway
     ports:
-      - "4000:4000"
-    environment:
-      - MONGO_URL=mongodb://auth-mongo:27017/authDB
-      - REDIS_URL=redis://auth-redis:6379
-      - APP_PASSWORD=vtbytwkofwmbmugg
-      - EMAIL_USER=developer.athul.mern@gmail.com
-      - EMAIL_PASS=vtbytwkofwmbmugg
-      - JWT_SECRET=yourSecret                 
+      # Production: Keep this port - Frontend connects here
+      - "3000:8080" # Host:3000 -> Container:8080
 
+    env_file:
+      - ./API-Gateway/.env
     depends_on:
-      - auth-mongo
-      - auth-redis
+      - auth-service
+      - mentor-service
+    networks:
+      - backend-network
 
-  auth-mongo:
-    image: mongo
-    container_name: auth-DB
-    restart: always
+  auth-service:
+    build: ./Auth-service
+    container_name: auth-service
     ports:
-      - "27017:27017"
-    volumes:
-      - auth_mongo_data:/data/db
+      # Debug only: Remove in production - Access via gateway only
+      - "4001:8080" # Debug: Host:4000 -> Container:8080 (for Postman/Swagger testing)
+    env_file:
+      - ./Auth-service/.env
+    networks:
+      - backend-network
 
-  auth-redis:
-    image: redis:alpine
-    container_name: auth-redis
-    restart: always
+  mentor-service:
+    build: ./Mentor-service
+    container_name: mentor-service
     ports:
-      - "6379:6379"
+      # Debug only: Remove in production - Access via gateway only
+      - "5001:8080" # Debug: Host:5001 -> Container:8080
+    env_file:
+      - ./Mentor-service/.env
+    networks:
+      - backend-network
 
-  # ==========================
-  # MENTOR SERVICE
-  # ==========================
-  # mentor-service:
-  #   build: "./Mentor-service"
-  #   container_name: ttp-mentor
-  #   ports:
-  #     - "4003:4000"
-  #   environment:
-  #     - MONGO_URL=mongodb://mentor-mongo:27017/mentorDB
-  #   depends_on:
-  #     - mentor-mongo
-
-  # mentor-mongo:
-  #   image: mongo
-  #   container_name: mentor-mongo
-  #   restart: always
-  #   ports:
-  #     - "27018:27017"
-  #   volumes:
-  #     - mentor_mongo_data:/data/db
-
-volumes:
-  auth_mongo_data:
-  # mentor_mongo_data:
+networks:
+  backend-network:
+    driver: bridge

@@ -6,10 +6,10 @@ WORKDIR /app
 # Copy package.json and lock file
 COPY package*.json ./
 
-# Install all deps (or use --omit=dev in production)
+# Install dependencies
 RUN npm install
 
-# Copy the service code
+# Copy the gateway code
 COPY . .
 
 # Build TypeScript to dist/
