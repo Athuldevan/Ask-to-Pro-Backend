@@ -8,48 +8,36 @@ export const createProxy = (serviceTarget: string, servicePath: string) => {
   const proxyOptions: Options = {
     target: serviceTarget,
     changeOrigin: true,
-    pathRewrite: (path: string) => {
-      // Keep the path as-is (services expect full paths)
-      return path;
-    },
+    selfHandleResponse: false, // 🔥 REQUIRED
+    pathRewrite: (path: string) => path,
+
     on: {
       proxyReq: (proxyReq, req: IncomingMessage) => {
-        // Forward original headers including Authorization and cookies
-        // The Authorization header is already in the request from the client
-        // If JWT was validated, we can optionally forward user info as headers
-        const expressReq = req as unknown as AuthRequest;
+        const expressReq = req as any;
+
+        // Re-send body
+        if (expressReq.body && Object.keys(expressReq.body).length) {
+          const bodyData = JSON.stringify(expressReq.body);
+          proxyReq.setHeader("Content-Type", "application/json");
+          proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData));
+          proxyReq.write(bodyData);
+        }
+
         if (expressReq.user) {
           proxyReq.setHeader("X-User-Id", expressReq.user.id);
           proxyReq.setHeader("X-User-Role", expressReq.user.role);
         }
-        
-        // Log proxy request
-        const method = (req as any).method || "UNKNOWN";
-        const url = (req as any).url || req.url || "";
-        console.log(
-          `[PROXY] ${method} ${url} -> ${serviceTarget}${url}`
-        );
       },
-      error: (err: Error, req: IncomingMessage, res: ServerResponse<IncomingMessage> | any) => {
-        const url = (req as any).url || req.url || "unknown";
-        console.error(`[PROXY ERROR] ${url}:`, err.message);
-        if (res && typeof res.status === 'function' && !res.headersSent) {
+
+      error: (err, req, res: any) => {
+        if (!res.headersSent) {
           res.status(502).json({
             status: "error",
-            message: `Service unavailable: ${serviceTarget}`,
+            message: "Upstream service unavailable",
           });
-        } else if (res && typeof res.writeHead === 'function' && !res.headersSent) {
-          res.writeHead(502, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({
-            status: "error",
-            message: `Service unavailable: ${serviceTarget}`,
-          }));
         }
       },
     },
-    // Preserve cookie headers
-    cookieDomainRewrite: "",
-    cookiePathRewrite: "",
   };
 
   return createProxyMiddleware(proxyOptions);
@@ -88,4 +76,3 @@ export const handleProxy = (
 
   proxyHandler(req, res, next);
 };
-
