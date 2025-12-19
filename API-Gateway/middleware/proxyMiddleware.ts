@@ -1,8 +1,8 @@
 import { createProxyMiddleware, Options } from "http-proxy-middleware";
 import type { Request, Response, NextFunction } from "express";
 import type { IncomingMessage, ServerResponse } from "http";
-import { getServiceByPath, services } from "../config/services.js";
-import type { AuthRequest } from "./jwtMiddleware.js";
+import { getServiceByPath, services } from "../config/services";
+import type { AuthRequest } from "./jwtMiddleware";
 
 export const createProxy = (serviceTarget: string, servicePath: string) => {
   const proxyOptions: Options = {

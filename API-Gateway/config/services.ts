@@ -8,7 +8,7 @@ export const services: ServiceConfig[] = [
   {
     name: "auth-service",
     target: process.env.AUTH_SERVICE_URL || "http://auth-service:8080",
-    path: "/api/v1/auth",
+    path: "/api/v1/auth",   
   },
   {
     name: "mentor-service",

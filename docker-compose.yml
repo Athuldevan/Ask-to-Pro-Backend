@@ -3,9 +3,7 @@ services:
     build: ./API-Gateway
     container_name: api-gateway
     ports:
-      # Production: Keep this port - Frontend connects here
-      - "3000:8080" # Host:3000 -> Container:8080
-
+      - "3000:8080"
     env_file:
       - ./API-Gateway/.env
     depends_on:
@@ -17,9 +15,8 @@ services:
   auth-service:
     build: ./Auth-service
     container_name: auth-service
-    ports:
-      # Debug only: Remove in production - Access via gateway only
-      - "4001:8080" # Debug: Host:4000 -> Container:8080 (for Postman/Swagger testing)
+    expose:
+      - "8080"
     env_file:
       - ./Auth-service/.env
     networks:
@@ -28,9 +25,8 @@ services:
   mentor-service:
     build: ./Mentor-service
     container_name: mentor-service
-    ports:
-      # Debug only: Remove in production - Access via gateway only
-      - "5001:8080" # Debug: Host:5001 -> Container:8080
+    expose:
+      - "8080"
     env_file:
       - ./Mentor-service/.env
     networks:

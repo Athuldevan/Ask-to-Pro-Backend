@@ -6,10 +6,10 @@ WORKDIR /app
 # Copy package.json and lock file
 COPY package*.json ./
 
-# Install dependencies
+# Install all deps (or use --omit=dev in production)
 RUN npm install
 
-# Copy the gateway code
+# Copy the service code
 COPY . .
 
 # Build TypeScript to dist/
@@ -19,5 +19,5 @@ RUN npm run build
 EXPOSE 8080
 
 # Start the built server
-CMD ["node", "dist/server.js"]
 
+CMD ["node", "dist/server.js"]

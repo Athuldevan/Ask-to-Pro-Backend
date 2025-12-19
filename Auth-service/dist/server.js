@@ -1,13 +1,19 @@
 import app from "./app.js";
 import dotenv from "dotenv";
 dotenv.config();
-console.log("REDIS_URL =>", process.env.REDIS_URL);
 import { connectRedis } from "./config/redis.js";
-await connectRedis();
-console.log(`Redis connected sucessfully✅`);
 import { connectToDB } from "./config/database.js";
 connectToDB();
-app.listen(4000, () => {
-    console.log(`Auth service is running on the port 4000⌛`);
+const PORT = Number(process.env.PORT) || 8080;
+const HOST = "0.0.0.0";
+app.listen(PORT, HOST, () => {
+    console.log(`Auth service running on ${HOST}:${PORT}`);
 });
+// connect infra AFTER server is up
+connectRedis()
+    .then(() => console.log("Redis connected"))
+    .catch((err) => console.error("Redis error", err));
+connectToDB()
+    .then(() => console.log("DB connected"))
+    .catch((err) => console.error("DB error", err));
 //# sourceMappingURL=server.js.map

@@ -1,13 +1,11 @@
 import express, { type Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
-import { configureCORS } from "./middleware/corsMiddleware.js";
-import { validateJWT } from "./middleware/jwtMiddleware.js";
-import { requestLogger } from "./middleware/loggingMiddleware.js";
-import { handleProxy } from "./middleware/proxyMiddleware.js";
+import { configureCORS } from "./middleware/corsMiddleware";
+import { validateJWT } from "./middleware/jwtMiddleware";
+import { requestLogger } from "./middleware/loggingMiddleware";
+import { handleProxy } from "./middleware/proxyMiddleware";
 
 const app = express();
-
-// Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
