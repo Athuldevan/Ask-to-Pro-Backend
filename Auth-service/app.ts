@@ -2,9 +2,9 @@ import express from "express";
 import cookiParser from "cookie-parser";
 import type { Request, Response, NextFunction } from "express";
 import authRouter from "./routes/authRouter.js";
+import profileRouter from "./routes/profileRouter.js";
 
 const app = express();
-
 
 app.use(express.json());
 app.use(cookiParser());
@@ -22,7 +22,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     status: err.status,
     message: err.message,
     stack: err.stack,
-  });
+  }); 
 });
 
 export default app;

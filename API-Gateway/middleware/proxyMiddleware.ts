@@ -15,17 +15,18 @@ export const createProxy = (serviceTarget: string, servicePath: string) => {
       proxyReq: (proxyReq, req: IncomingMessage) => {
         const expressReq = req as any;
 
+        // Set user headers first
+        if (expressReq.user) {
+          proxyReq.setHeader("X-User-Id", expressReq.user.id);
+          proxyReq.setHeader("X-User-Role", expressReq.user.role);
+        }
+
         // Re-send body
         if (expressReq.body && Object.keys(expressReq.body).length) {
           const bodyData = JSON.stringify(expressReq.body);
           proxyReq.setHeader("Content-Type", "application/json");
           proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData));
           proxyReq.write(bodyData);
-        }
-
-        if (expressReq.user) {
-          proxyReq.setHeader("X-User-Id", expressReq.user.id);
-          proxyReq.setHeader("X-User-Role", expressReq.user.role);
         }
       },
 

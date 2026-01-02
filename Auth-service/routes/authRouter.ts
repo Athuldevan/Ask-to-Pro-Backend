@@ -15,6 +15,7 @@ import {
   verifyUserSchema,
 } from "../validations/authValidations.js";
 import { protect } from "../middlewares/protectMiddleware.js";
+import { editProfile } from "../controller/profileController.js";
 
 const router = express.Router();
 router.post(
@@ -34,5 +35,8 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset/:token", resetPassword);
 router.post("/refresh", refresh);
 router.get("/me", protect, viewProfile);
+
+
+router.patch("/profile/edit", protect, editProfile);
 
 export default router;
