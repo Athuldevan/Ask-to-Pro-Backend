@@ -8,7 +8,7 @@ export interface IUser extends Document {
   password: string;
   image: string;
   isPremium: boolean;
-  role: "user" | "admin";
+  role: "user" | "admin" | "mentor";
   chatMessageCount: number;
   passwordResetToken?: string | undefined;
   passwordResetExpires?: Date;
@@ -49,7 +49,6 @@ const userSchema = new Schema<IUser>(
     role: {
       type: String,
       enum: ["user", "admin","mentor"],
-      default: "user",
     },
 
     chatMessageCount: {

@@ -12,11 +12,12 @@ export async function createUser(
   const data = await User.create({
     name,
     email,
-    password : password!,
+    password: password!,
   });
   return data;
 }
 
+//  --------------Verify Otp--------------------------
 export async function verifyOtp(enteredOtp: string, email: string) {
   const storedOtp = await client.get(`otp:${email}`);
   if (!storedOtp) throw new AppError(`The Otp Expired`, 400);

@@ -18,6 +18,7 @@ import RefreshToken, {
 // -------------------------- REGISTER --------------------------------
 export const register = async function (req: Request, res: Response) {
   const { name, email, password, role } = req.body;
+  console.log(role);
   if (!name || !email || !password)
     throw new AppError(`Please provide all credentials`, 400);
   const otp = await sendOtp(email);
