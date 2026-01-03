@@ -1,7 +1,7 @@
 import express from "express";
-import { protect } from "../middlewares/protectMiddleware";
-import { editProfile } from "../controller/profile.controller";
+import { protect } from "../middlewares/protectMiddleware.js";
+import { editProfile } from "../controller/profileController.js";
 const router = express.Router();
-router.patch("/edit", protect, editProfile);
+router.patch("/profile/edit", protect, editProfile);
 export default router;
 //# sourceMappingURL=profileRouter.js.map

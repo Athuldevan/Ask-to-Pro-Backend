@@ -1,6 +1,7 @@
 import express from "express";
 import cookiParser from "cookie-parser";
 import authRouter from "./routes/authRouter.js";
+import profileRouter from "./routes/profileRouter.js";
 const app = express();
 app.use(express.json());
 app.use(cookiParser());

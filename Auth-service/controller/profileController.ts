@@ -8,8 +8,10 @@ export const editProfile = async function (
   next: NextFunction
 ) {
   const { id, role } = req.user as JwtPayload;
+  console.log(id, "JWT");
   const { name, phone } = req.body;
-  const user = editProfileService(id, role, name);
+  console.log(req.body.formData);
+  const user = await editProfileService(id, name);
   return res.status(200).json({
     status: "sucess",
     user,
