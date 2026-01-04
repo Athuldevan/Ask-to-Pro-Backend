@@ -11,7 +11,8 @@ type mentorData = {
   // mentor profile
   bio: string;
   skills: string[];
-  category: string;
+  career : string;
+  domains : string[];
   education: string;
 
   githubUrl?: string;
@@ -19,7 +20,8 @@ type mentorData = {
   jobTitle?: string;
 
   experience: number;
-  price: number;
+  hourleyRate: number;
+  currency : string;
 };
 
 
@@ -42,7 +44,8 @@ export const createMentor = async (userId: string, data: mentorData) => {
 
     bio: data.bio,
     skills: data.skills,
-    category: data.category,
+    career : data.career,
+    domains : data.domains,
     education: data.education,
 
     githubUrl: data.githubUrl,
@@ -50,7 +53,7 @@ export const createMentor = async (userId: string, data: mentorData) => {
     jobTitle: data.jobTitle,
 
     experience: data.experience,
-    price: data.price,
+    hourlyRate: data.hourleyRate,
 
     isVerified: true,
     verificationStatus: "pending",

@@ -1,28 +1,35 @@
-import { AppError } from "../utils/AppError.js";
-import Mentor from "../model/mentorModel.js";
-import mongoose from "mongoose";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getSingleMentorById = exports.getAllApprovedMentorService = exports.createMentor = void 0;
+const AppError_1 = require("../utils/AppError");
+const mentorModel_1 = __importDefault(require("../model/mentorModel"));
+const mongoose_1 = __importDefault(require("mongoose"));
 //Create Mentor;
-export const createMentor = async (userId, data) => {
-    const existing = await Mentor.findOne({
-        userId: new mongoose.Types.ObjectId(userId)
+const createMentor = async (userId, data) => {
+    const existing = await mentorModel_1.default.findOne({
+        userId: new mongoose_1.default.Types.ObjectId(userId)
     });
     if (existing) {
-        throw new AppError("Mentor already exists", 400);
+        throw new AppError_1.AppError("Mentor already exists", 400);
     }
-    const mentor = await Mentor.create({
-        userId: new mongoose.Types.ObjectId(userId),
+    const mentor = await mentorModel_1.default.create({
+        userId: new mongoose_1.default.Types.ObjectId(userId),
         userName: data.userName,
         userEmail: data.userEmail,
         userAvatar: data.userAvatar,
         bio: data.bio,
         skills: data.skills,
-        category: data.category,
+        career: data.career,
+        domains: data.domains,
         education: data.education,
         githubUrl: data.githubUrl,
         company: data.company,
         jobTitle: data.jobTitle,
         experience: data.experience,
-        price: data.price,
+        hourlyRate: data.hourleyRate,
         isVerified: true,
         verificationStatus: "pending",
         avgRating: 0,
@@ -31,10 +38,11 @@ export const createMentor = async (userId, data) => {
     });
     return mentor;
 };
+exports.createMentor = createMentor;
 // Get all mentors
-export const getAllApprovedMentorService = async function () {
+const getAllApprovedMentorService = async function () {
     try {
-        const mentors = await Mentor.find({
+        const mentors = await mentorModel_1.default.find({
             verificationStatus: "approved",
             isVerified: true,
         });
@@ -44,13 +52,15 @@ export const getAllApprovedMentorService = async function () {
         console.log(err.message);
     }
 };
+exports.getAllApprovedMentorService = getAllApprovedMentorService;
 //Get a single Mentor By Id
-export const getSingleMentorById = async function (id) {
+const getSingleMentorById = async function (id) {
     try {
-        const mentor = await Mentor.findById(id);
+        const mentor = await mentorModel_1.default.findById(id);
         return mentor;
     }
     catch (err) {
         console.log(err.message);
     }
 };
+exports.getSingleMentorById = getSingleMentorById;

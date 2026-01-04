@@ -10,15 +10,17 @@ export interface IMentor extends Document {
   // mentor profile
   bio: string;
   skills: string[];
-  category: string;
   education?: string;
 
   githubUrl?: string;
   company?: string;
+  career?: string;
+  domains?: string[];
   jobTitle?: string;
 
   experience: number;
-  price: number;
+  hourlyRate: number;
+  currency: string;
 
   // status flags
   isVerified: boolean;
@@ -70,11 +72,17 @@ const mentorSchema = new Schema<IMentor>(
       required: true,
     },
 
-    category: {
+    career: {
       type: String,
       required: true,
+      index: true,
     },
 
+    domains: {
+      type: [String],
+      required: true,
+      index: true,
+    },
     education: {
       type: String,
       default: "",
@@ -101,9 +109,8 @@ const mentorSchema = new Schema<IMentor>(
       min: 0,
     },
 
-    price: {
+    hourlyRate: {
       type: Number,
-      required: true,
       min: 0,
     },
 
@@ -131,6 +138,11 @@ const mentorSchema = new Schema<IMentor>(
     totalEarnings: {
       type: Number,
       default: 0,
+    },
+    currency: {
+      type: String,
+      default: "INR",
+      uppercase: true,
     },
   },
   { timestamps: true }
