@@ -88,7 +88,8 @@ export const login = catchAsync(async function (
   if (!email || !password) {
     throw new AppError("Please provide all the credentials ", 400);
   }
-  const user = await User.findOne({ email, password }).select("+password");
+  console.log(email, password);
+  const user = await User.findOne({ email }).select("+password");
   if (!user) throw new AppError("No such user found", 404);
 
   const isPassowrdValid = await user.verifyPassword(password);
