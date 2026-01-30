@@ -28,7 +28,6 @@ const userSchema = new Schema({
     role: {
         type: String,
         enum: ["user", "admin", "mentor"],
-        default: "user",
     },
     chatMessageCount: {
         type: Number,

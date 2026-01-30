@@ -11,6 +11,7 @@ export async function createUser(name, email, password) {
     });
     return data;
 }
+//  --------------Verify Otp--------------------------
 export async function verifyOtp(enteredOtp, email) {
     const storedOtp = await client.get(`otp:${email}`);
     if (!storedOtp)

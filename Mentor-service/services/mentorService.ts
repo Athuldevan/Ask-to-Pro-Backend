@@ -1,9 +1,8 @@
 import { AppError } from "../utils/AppError";
 import Mentor from "../model/mentorModel";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 type mentorData = {
-  // user snapshot (from auth / frontend)
   userName: string;
   userEmail: string;
   userAvatar?: string;
@@ -11,8 +10,8 @@ type mentorData = {
   // mentor profile
   bio: string;
   skills: string[];
-  career : string;
-  domains : string[];
+  career: string;
+  domains: string[];
   education: string;
 
   githubUrl?: string;
@@ -21,14 +20,12 @@ type mentorData = {
 
   experience: number;
   hourleyRate: number;
-  currency : string;
+  currency: string;
 };
 
-
-//Create Mentor;
 export const createMentor = async (userId: string, data: mentorData) => {
   const existing = await Mentor.findOne({
-    userId: new mongoose.Types.ObjectId(userId)
+    userId: new mongoose.Types.ObjectId(userId),
   });
 
   if (existing) {
@@ -44,8 +41,8 @@ export const createMentor = async (userId: string, data: mentorData) => {
 
     bio: data.bio,
     skills: data.skills,
-    career : data.career,
-    domains : data.domains,
+    career: data.career,
+    domains: data.domains,
     education: data.education,
 
     githubUrl: data.githubUrl,
@@ -60,20 +57,19 @@ export const createMentor = async (userId: string, data: mentorData) => {
 
     avgRating: 0,
     totalSessions: 0,
-    totalEarnings: 0
+    totalEarnings: 0,
   });
 
   return mentor;
 };
 
-// Get all mentors
 export const getAllApprovedMentorService = async function () {
   try {
     const mentors = await Mentor.find({
       verificationStatus: "approved",
       isVerified: true,
     });
-    
+
     return mentors;
   } catch (err: any) {
     console.log(err.message);
@@ -88,4 +84,15 @@ export const getSingleMentorById = async function (id: string) {
   } catch (err: any) {
     console.log(err.message);
   }
+};
+
+export const editMentorProfileService = async (
+  id: Types.ObjectId,
+  body: mentorData,
+) => {
+  console.log(id);
+  const mentor = await Mentor.findOneAndUpdate({ userId: id }, body, {
+    new: true,
+  });
+  return mentor;
 };

@@ -5,7 +5,7 @@ export interface IUser extends Document {
     password: string;
     image: string;
     isPremium: boolean;
-    role: "user" | "admin";
+    role: "user" | "admin" | "mentor";
     chatMessageCount: number;
     passwordResetToken?: string | undefined;
     passwordResetExpires?: Date;

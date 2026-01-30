@@ -5,6 +5,7 @@ import { AppError } from "../utils/AppError";
 import Mentor from "../model/mentorModel";
 import {
   createMentor,
+  editMentorProfileService,
   getAllApprovedMentorService,
   getSingleMentorById,
 } from "../services/mentorService";
@@ -23,18 +24,18 @@ export const createMentorProfile = tryCatch(
       message: "Mentor profile created successfully",
       mentor,
     });
-  }
+  },
 );
 
 //Get Pending Mentotrs
 export const getPendingMentors = tryCatch(async function (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const mentors = await Mentor.findOne({ verificationStatus: "pending" });
   return res.status(200).json({
-    status: "sucess",
+    status: "success",
     mentors,
   });
 });
@@ -43,7 +44,7 @@ export const getPendingMentors = tryCatch(async function (
 export const approveMentors = tryCatch(async function (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { id, status } = req.params;
   const mentor = await Mentor.findByIdAndUpdate(
@@ -52,14 +53,14 @@ export const approveMentors = tryCatch(async function (
       verificationStatus: "approved",
       isVerified: true,
     },
-    { new: true }
+    { new: true },
   );
   if (!mentor) {
     throw new AppError("No Mentor found", 404);
   }
 
   return res.status(200).json({
-    status: "sucess",
+    status: "success",
     message: "Approved mentor ",
     mentor,
   });
@@ -69,7 +70,7 @@ export const approveMentors = tryCatch(async function (
 export const rejectMentor = tryCatch(async function (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { id } = req.params;
   const mentor = await Mentor.findByIdAndUpdate(
@@ -78,7 +79,7 @@ export const rejectMentor = tryCatch(async function (
       verificationStatus: "rejected",
       isVerified: false,
     },
-    { new: true }
+    { new: true },
   );
 
   if (!mentor) {
@@ -95,40 +96,50 @@ export const rejectMentor = tryCatch(async function (
 export const getApprovedMentors = tryCatch(async function (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const mentors = await getAllApprovedMentorService();
   return res.status(200).json({
-    status: "sucess",
+    status: "success",
     mentors,
   });
 });
 
-//Get A Single Mentor
 export const getMentor = tryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const mentor = await getSingleMentorById(id);
     if (!mentor) throw new AppError("No Mentor found", 404);
     return res.status(200).json({
-      status: "sucess",
+      status: "success",
       mentor,
     });
-  }
+  },
 );
 
-//GEt Mentor Profile
 export const getMentorProfile = tryCatch(async function (
   req: AuthRequest,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) {
   const { id: userId, role } = req.user as JwtPayload;
   if (role != "mentor") throw new AppError("Not a Mentor", 403);
   const mentor = await Mentor.findOne({ userId });
   if (!mentor) throw new AppError("Mentor Profile Not Found", 404);
   return res.status(200).json({
-    status: "sucess",
+    status: "success",
     mentor,
   });
 });
+
+export const editMentorProfile = async (req: AuthRequest, res: Response) => {
+  const { id } = req?.user as JwtPayload;
+  
+  const mentor = await editMentorProfileService(id, req.body);
+  if (!mentor) throw new AppError("No Such  Mentor found", 404);
+  return res.status(200).json({
+    status: "success",
+    mentor,
+    message: "successfully edited the profile",
+  });
+};

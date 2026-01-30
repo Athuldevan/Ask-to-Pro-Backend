@@ -10,6 +10,7 @@ import RefreshToken, {} from "../model/refreshTokenModel.js";
 // -------------------------- REGISTER --------------------------------
 export const register = async function (req, res) {
     const { name, email, password, role } = req.body;
+    console.log(role);
     if (!name || !email || !password)
         throw new AppError(`Please provide all credentials`, 400);
     const otp = await sendOtp(email);
@@ -55,6 +56,7 @@ export const login = catchAsync(async function (req, res, next) {
     if (!email || !password) {
         throw new AppError("Please provide all the credentials ", 400);
     }
+    console.log(email, password);
     const user = await User.findOne({ email }).select("+password");
     if (!user)
         throw new AppError("No such user found", 404);

@@ -8,8 +8,7 @@ dotenv.config()
 
 const app = express();
 
-// CORS and JWT validation are now handled by API Gateway
-// Keeping minimal setup for internal service-to-service communication
+
 app.use(express.json());
 app.use("/api/v1/mentor", mentorRouter);
 app.use("/api/v1/admin", adminRouter);
