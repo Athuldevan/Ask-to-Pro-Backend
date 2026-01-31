@@ -1,8 +1,8 @@
 import express from "express";
 import cookiParser from "cookie-parser";
 import type { Request, Response, NextFunction } from "express";
-import authRouter from "./routes/authRouter.js";
-import profileRouter from "./routes/profileRouter.js";
+import authRouter from "./routes/auth.route.js";
+import profileRouter from "./routes/profile.route.js";
 
 const app = express();
 
@@ -12,6 +12,7 @@ app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok" });
 });
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/profile", profileRouter);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   err.statusCode = err.statusCode || 500 || 404;
@@ -22,7 +23,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     status: err.status,
     message: err.message,
     stack: err.stack,
-  }); 
+  });
 });
 
 export default app;

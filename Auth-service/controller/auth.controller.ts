@@ -5,7 +5,7 @@ import {
   type NextFunction,
   response,
 } from "express";
-import { requestResetPassword, verifyOtp } from "../service/authService.js";
+import { requestResetPassword, verifyOtp } from "../service/auth.service.js";
 import { sendOtp } from "../utils/otp.js";
 import { client } from "../config/redis.js";
 import User from "../model/userModel.js";

@@ -7,7 +7,7 @@ type mentorData = {
   userEmail: string;
   userAvatar?: string;
 
-  // mentor profile
+  
   bio: string;
   skills: string[];
   career: string;

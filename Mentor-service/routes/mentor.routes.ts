@@ -6,8 +6,8 @@ import {
   getApprovedMentors,
   getMentor,
   getMentorProfile,
-} from "../controller/mentorController";
-import { createSlot, getAllSlots } from "../controller/slotController";
+} from "../controller/mentor.controller";
+import { createSlot, getAllSlots } from "../controller/slot.controller";
 import { tryCatch } from "../utils/tryCatch";
 
 const router = express.Router();

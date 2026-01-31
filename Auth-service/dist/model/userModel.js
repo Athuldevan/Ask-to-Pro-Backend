@@ -38,20 +38,16 @@ const userSchema = new Schema({
         type: Date,
     },
 }, { timestamps: true });
-////////////////////////////////////////////////////////
-//hash password
 userSchema.pre("save", async function () {
     if (!this.isModified("password"))
         return;
     this.password = await bcrypt.hash(this.password, 6);
 });
-//Verify password;
 userSchema.methods.verifyPassword = async function (enteredPassword) {
     if (!enteredPassword)
         throw new AppError(`Password field is missing`, 400);
     return await bcrypt.compare(enteredPassword, this.password);
 };
-//create resetPassword Token
 userSchema.methods.createResetPasswordToken = async function () {
     const raw = crypto.randomBytes(32).toString("hex");
     this.passwordResetToken = crypto
@@ -59,7 +55,7 @@ userSchema.methods.createResetPasswordToken = async function () {
         .update("raw")
         .digest("hex");
     this.passwordResetExpires = Date.now() + 1000 * 60 * 15; // 15 min
-    return raw; // sending this raw token to in email;
+    return raw;
 };
 const User = mongoose.model("User", userSchema);
 export default User;

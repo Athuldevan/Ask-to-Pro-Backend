@@ -1,11 +1,12 @@
-import { editProfileService } from "../service/profil.Service";
-export const editProfile = async function (req, res, next) {
-    const { id, role } = req.user;
-    const { name, phone } = req.body;
-    const user = editProfileService(id, role, name);
+import { editStudentProfileService } from "../service/profile.service.js";
+export const editStudentProfile = async function (req, res) {
+    const { id } = req?.user;
+    const body = req?.body;
+    const mentor = await editStudentProfileService(id, req.body);
     return res.status(200).json({
-        status: "sucess",
-        user,
+        status: "success",
+        message: "Successfully edited Profile",
+        mentor,
     });
 };
 //# sourceMappingURL=profile.controller.js.map

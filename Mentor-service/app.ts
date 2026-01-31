@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
-import mentorRouter from "./routes/mentorRouter";
-import adminRouter from "./routes/adminRouter";
+import mentorRouter from "./routes/mentor.routes";
+import adminRouter from "./routes/admin.routes";
 
 import dotenv from "dotenv";
 

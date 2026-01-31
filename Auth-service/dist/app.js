@@ -1,7 +1,7 @@
 import express from "express";
 import cookiParser from "cookie-parser";
-import authRouter from "./routes/authRouter.js";
-import profileRouter from "./routes/profileRouter.js";
+import authRouter from "./routes/auth.route.js";
+import profileRouter from "./routes/profile.route.js";
 const app = express();
 app.use(express.json());
 app.use(cookiParser());
@@ -9,6 +9,7 @@ app.get("/health", (req, res) => {
     res.status(200).json({ status: "ok" });
 });
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/profile");
 app.use((err, req, res, next) => {
     err.statusCode = err.statusCode || 500 || 404;
     err.status = err.status || "error";

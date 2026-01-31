@@ -6,4 +6,10 @@ export interface UserInput {
     role?: "user" | "admin";
     chatMessageCount?: number;
 }
+export interface StudentType {
+    name: string;
+    email: string;
+    password?: string;
+    image?: string;
+}
 //# sourceMappingURL=types.d.ts.map

@@ -64,15 +64,15 @@ const userSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-////////////////////////////////////////////////////////
 
-//hash password
+
+
 userSchema.pre<IUser>("save", async function () {
   if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 6);
 });
 
-//Verify password;
+
 userSchema.methods.verifyPassword = async function (
   enteredPassword: string
 ): Promise<boolean> {
@@ -80,7 +80,7 @@ userSchema.methods.verifyPassword = async function (
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-//create resetPassword Token
+
 userSchema.methods.createResetPasswordToken = async function () {
   const raw = crypto.randomBytes(32).toString("hex");
   this.passwordResetToken = crypto
@@ -88,7 +88,7 @@ userSchema.methods.createResetPasswordToken = async function () {
     .update("raw")
     .digest("hex");
   this.passwordResetExpires = Date.now() + 1000 * 60 * 15; // 15 min
-  return raw; // sending this raw token to in email;
+  return raw; 
 };
 
 const User = mongoose.model<IUser>("User", userSchema);

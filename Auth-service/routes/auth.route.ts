@@ -8,14 +8,13 @@ import {
   resetPassword,
   verifyUser,
   viewProfile,
-} from "../controller/authController.js";
+} from "../controller/auth.controller.js";
 import { validate } from "../middlewares/joiValidation.js";
 import {
   registerSchema,
   verifyUserSchema,
 } from "../validations/authValidations.js";
 import { protect } from "../middlewares/protectMiddleware.js";
-import { editProfile } from "../controller/profileController.js";
 
 const router = express.Router();
 router.post(
@@ -37,6 +36,6 @@ router.post("/refresh", refresh);
 router.get("/me", protect, viewProfile);
 
 
-router.patch("/profile/edit", protect, editProfile);
+
 
 export default router;

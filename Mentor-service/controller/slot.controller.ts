@@ -3,7 +3,7 @@ import { tryCatch } from "../utils/tryCatch";
 import { AppError } from "../utils/AppError";
 import { AuthRequest } from "../middleware/ProtectMiddleware";
 
-import { createSlotService, getSlots } from "../services/slotService";
+import { createSlotService, getSlots } from "../services/slot.service";
 
 // Create Slot
 export const createSlot = tryCatch(async function (

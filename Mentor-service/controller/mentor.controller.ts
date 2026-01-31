@@ -8,7 +8,7 @@ import {
   editMentorProfileService,
   getAllApprovedMentorService,
   getSingleMentorById,
-} from "../services/mentorService";
+} from "../services/mentor.service";
 import { JwtPayload } from "jsonwebtoken";
 
 // Get Profile
