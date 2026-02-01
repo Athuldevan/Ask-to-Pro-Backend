@@ -1,0 +1,37 @@
+{
+  "name": "ask-to-pro-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec ts-node src/bin/server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Athuldevan/Ask-to-Pro-Backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Athuldevan/Ask-to-Pro-Backend/issues"
+  },
+  "homepage": "https://github.com/Athuldevan/Ask-to-Pro-Backend#readme",
+  "description": "",
+  "dependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.6",
+    "@types/mongoose": "^5.11.96",
+    "@types/morgan": "^1.9.10",
+    "@types/winston": "^2.4.4",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mongoose": "^9.1.5",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "winston": "^3.19.0"
+  }
+}
